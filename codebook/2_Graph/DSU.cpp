@@ -2,9 +2,12 @@ struct DSU {
     int n;
     vector<int> boss, siz;
     DSU() {}
-    DSU(int n_) { init(n_); }
-    void init(int n_) {
-        n = n_; boss.resize(n);
+    DSU(int n_) {
+        init(n_);
+    }
+    void init(int n_ = 0) {
+        n = n_;
+        boss.resize(n);
         iota(boss.begin(), boss.end(), 0);
         siz.assign(n, 1);
     }
@@ -16,9 +19,14 @@ struct DSU {
         return find(x) == find(y);
     }
     bool merge(int x, int y) {
-        x = find(x); y = find(y);
-        if (x == y) return false;
-        if (siz[x] < siz[y]) swap(x, y);
+        x = find(x);
+        y = find(y);
+        if (x == y) {
+            return false;
+        }
+        if (siz[x] < siz[y]) {
+            swap(x, y);
+        }
         siz[x] += siz[y];
         boss[y] = x;
         n--;
@@ -32,8 +40,9 @@ struct DSU {
 struct DSU {
     int n;
     vector<int> boss, siz, stk;
-    DSU() {}
-    DSU(int n_) { init(n_); }
+    DSU(int n_ = 0) {
+        init(n_);
+    }
     void init(int n_) {
         n = n_;
         boss.resize(n);
@@ -48,9 +57,14 @@ struct DSU {
         return find(x) == find(y);
     }
     bool merge(int x, int y) {
-        x = find(x); y = find(y);
-        if (x == y) return false;
-        if (siz[x] < siz[y]) swap(x, y);
+        x = find(x);
+        y = find(y);
+        if (x == y) {
+            return false;
+        }
+        if (siz[x] < siz[y]) {
+            swap(x, y);
+        }
         siz[x] += siz[y];
         boss[y] = x;
         n--;

@@ -2,7 +2,9 @@ int main() { // 排程有權重問題，輸出價值最多且時間最少
     struct E {
         int from, to, w, id;
     };
-    int n; cin >> n; vector<E> a(n + 1);
+    int n;
+    cin >> n;
+    vector<E> a(n + 1);
     for (int i = 1; i <= n; i++) {
         int u, v, w;
         cin >> u >> v >> w;

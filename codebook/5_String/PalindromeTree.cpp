@@ -26,14 +26,16 @@ struct PAM {
     int extend(int p, int c) {
         int n = s.size();
         s.push_back(c);
-        while (s[n - t[p].len - 1] != c)
+        while (s[n - t[p].len - 1] != c) {
             p = t[p].fail;
+        }
         if (!t[p].next[c]) {
             int r = newNode();
             t[r].len = t[p].len + 2;
             int cur = t[p].fail;
-            while (s[n - t[cur].len - 1] != c)
+            while (s[n - t[cur].len - 1] != c) {
                 cur = t[cur].fail;
+            }
             t[r].fail = t[cur].next[c];
             t[p].next[c] = r;
         }
@@ -42,17 +44,21 @@ struct PAM {
     }
 };
 void solve() {
-    string s; cin >> s;
+    string s;
+    cin >> s;
     int n = s.length();
     vector<int> last(n + 1);
     last[0] = 1;
     PAM pam;
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < n; i++) {
         last[i + 1] = pam.extend(last[i], s[i] - 'a');
+    }
     int sz = pam.t.size();
     vector<int> cnt(sz);
-    for (int i = 1; i <= n; i++)
+    for (int i = 1; i <= n; i++) {
         cnt[last[i]]++; // 去重 = 1
-    for (int i = sz - 1; i > 1; i--)
+    }
+    for (int i = sz - 1; i > 1; i--) {
         cnt[pam.t[i].fail] += cnt[i];
+    }
 }

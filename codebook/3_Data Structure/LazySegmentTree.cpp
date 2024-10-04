@@ -7,15 +7,13 @@ struct LazySeg {    // 左閉右開寫法
     LazySeg(int n_, Info v_ = Info()) {
         init(n_, v_);
     }
-    template<class T>
-    LazySeg(vector<T> init_) {
+    LazySeg(vector<Info> init_) {
         init(init_);
     }
     void init(int n_, Info v_ = Info()) {
         init(vector(n_, v_));
     }
-    template<class T>
-    void init (vector<T> init_) {
+    void init(vector<Info> init_) {
         n = init_.size();
         info.assign(4 << __lg(n), Info());
         tag.assign(4 << __lg(n), Tag());
@@ -64,8 +62,12 @@ struct LazySeg {    // 左閉右開寫法
         modify(1, 0, n, p, i);
     }
     Info query(int p, int l, int r, int ql, int qr) {
-        if (qr <= l || ql >= r) return Info();
-        if (ql <= l && r <= qr) return info[p];
+        if (qr <= l || ql >= r) {
+            return Info();
+        }
+        if (ql <= l && r <= qr) {
+            return info[p];
+        }
         int m = (l + r) / 2;
         push(p, l, r);
 	    return query(p * 2, l, m, ql, qr) + query(p * 2 + 1, m, r, ql, qr);
@@ -74,7 +76,9 @@ struct LazySeg {    // 左閉右開寫法
         return query(1, 0, n, ql, qr);
     }
     void range_apply(int p, int l, int r, int ql, int qr, const Tag &v) {
-        if (qr <= l || ql >= r) return;
+        if (qr <= l || ql >= r) {
+            return;
+        }
         if (ql <= l && r <= qr) {
             apply(p, l, r, v);
             return;
@@ -90,9 +94,15 @@ struct LazySeg {    // 左閉右開寫法
     }
     template<class F>   // 尋找區間內，第一個符合條件的
     int findFirst(int p, int l, int r, int x, int y, F &&pred) {
-        if (l >= y || r <= x) return -1;
-        if (l >= x && r <= y && !pred(info[p])) return -1;
-        if (r - l == 1) return l;
+        if (l >= y || r <= x) {
+            return -1;
+        }
+        if (l >= x && r <= y && !pred(info[p])) {
+            return -1;
+        }
+        if (r - l == 1) {
+            return l;
+        }
         int m = (l + r) / 2;
         push(p);
         int res = findFirst(2 * p, l, m, x, y, pred);

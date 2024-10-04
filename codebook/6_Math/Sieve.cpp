@@ -9,9 +9,13 @@ void sieve(int n) {
             primes.push_back(i);
         }
         for (auto p : primes) {
-            if (i * p > n) break;
+            if (i * p > n) {
+                break;
+            }
             minp[i * p] = p;
-            if (p == minp[i]) break;
+            if (p == minp[i]) {
+                break;
+            }
         }
     }
 }

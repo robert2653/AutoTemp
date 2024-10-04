@@ -3,12 +3,16 @@ struct EBCC { // CF/contest/1986/pF
     vector<vector<int>> adj;
     vector<int> stk, dfn, low, bel;
     vector<pair<int, int>> bridges; // 關鍵邊
-    EBCC(int n_ = 0) { init(n_); }
+    EBCC(int n_ = 0) {
+        init(n_);
+    }
     void init(int n_) {
         n = n_;
         adj.assign(n, {});
-        dfn.assign(n, -1), low.resize(n);
-        bel.assign(n, -1), stk.clear();
+        dfn.assign(n, -1);
+        low.resize(n);
+        bel.assign(n, -1);
+        stk.clear();
         bridges.clear();
         cur = cnt = 0;
     }
@@ -20,7 +24,9 @@ struct EBCC { // CF/contest/1986/pF
         dfn[x] = low[x] = cur++;
         stk.push_back(x);
         for (auto y : adj[x]) {
-            if (y == p) continue;
+            if (y == p) {
+                continue;
+            }
             if (dfn[y] == -1) {
                 dfs(y, x);
                 low[x] = min(low[x], low[y]);
@@ -42,15 +48,17 @@ struct EBCC { // CF/contest/1986/pF
         }
     }
     vector<int> work() { // not connected
-        for (int i = 0; i < n; i++)
-            if (dfn[i] == -1) dfs(i, -1);
+        for (int i = 0; i < n; i++) {
+            if (dfn[i] == -1) {
+                dfs(i, -1);
+            }
+        }
         return bel;
     }
     struct Graph {
         int n;
         vector<pair<int, int>> edges;
-        vector<int> siz; // BCC 內節點數
-        vector<int> cnte; // BCC 內邊數
+        vector<int> siz, cnte;
     };
     Graph compress() {
         Graph g;

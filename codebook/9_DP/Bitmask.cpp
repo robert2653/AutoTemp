@@ -1,21 +1,31 @@
 void hamiltonianPath() {
-    int n, m; cin >> n >> m;
+    int n, m;
+    cin >> n >> m;
     vector<vector<int>> adj(n);
     for (int i = 0; i < m; i++) {
-        int u, v; cin >> u >> v;
+        int u, v;
+        cin >> u >> v;
         adj[--v].push_back(--u);
     }
     // 以...為終點，走過...
     vector dp(n, vector<int>(1 << n));
     dp[0][1] = 1;
     for (int mask = 1; mask < 1 << n; mask++) {
-        if ((mask & 1) == 0) continue;
+        if ((mask & 1) == 0) {
+            continue;
+        }
         for (int i = 0; i < n; i++) {
-            if ((mask >> i & 1) == 0) continue;
-            if (i == n - 1 && mask != (1 << n) - 1) continue;
+            if ((mask >> i & 1) == 0) {
+                continue;
+            }
+            if (i == n - 1 && mask != (1 << n) - 1) {
+                continue;
+            }
             int pre = mask ^ (1 << i);
             for (int j : adj[i]) {
-                if ((pre >> j & 1) == 0) continue;
+                if ((pre >> j & 1) == 0) {
+                    continue;
+                }
                 dp[i][mask] = (dp[i][mask] + dp[j][pre]) % Mod;
             }
         }
@@ -23,7 +33,8 @@ void hamiltonianPath() {
     cout << dp[n - 1][(1 << n) - 1] << "\n";
 }
 void elevatorRides() {
-    int n, x; cin >> n >> x;
+    int n, x;
+    cin >> n >> x;
     vector<int> a(n);
     for (int i = 0; i < n; i++) {
         cin >> a[i];
@@ -33,7 +44,9 @@ void elevatorRides() {
     for (int mask = 1; mask < 1 << n; mask++) {
         dp[mask] = 2E9;
         for (int i = 0; i < n; i++) {
-            if ((mask >> i & 1) == 0) continue;
+            if ((mask >> i & 1) == 0) {
+                continue;
+            }
             int pre = mask ^ (1 << i);
             if (f[pre] + a[i] <= x) {
                 if (dp[pre] < dp[mask] || dp[pre] == dp[mask] && f[pre] + a[i] < f[mask]) {

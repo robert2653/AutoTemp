@@ -8,16 +8,19 @@ struct PST {
     int n = 0;
     vector<int> rt;
     PST() : n(0) {}
-    PST(int n_, Info v_ = Info()) { init(n_, v_); }
-    template<class T>
-    PST(vector<T> init_) { init(init_); }
+    PST(int n_, Info v_ = Info()) {
+        init(n_, v_);
+    }
+    PST(vector<Info> init_) {
+        init(init_);
+    }
     void init(int n_, Info v_ = Info()) {
         init(vector<Info>(n_, v_));
     }
-    template<class T>
-    void init(vector<T> init_) {
+    void init(vector<Info> init_) {
         n = init_.size();
-        nd.clear(); rt.clear();
+        nd.clear();
+        rt.clear();
         nd.emplace_back(); // 讓 root 指向 1-based
         rt.push_back(build(0, n, init_));
     }
@@ -61,12 +64,18 @@ struct PST {
         return t;
     }
     void modify(int ver, int pos, const Info &val) {
-        if (int(rt.size()) <= ver) rt.resize(ver + 1);
+        if (int(rt.size()) <= ver) {
+            rt.resize(ver + 1);
+        }
         rt[ver] = modify(rt[ver], 0, n, pos, val);
     }
     Info query(int t, int l, int r, int ql, int qr) {
-        if (l >= qr || r <= ql) return Info();
-        if (ql <= l && r <= qr) return nd[t].info;
+        if (l >= qr || r <= ql) {
+            return Info();
+        }
+        if (ql <= l && r <= qr) {
+            return nd[t].info;
+        }
         int m = (l + r) >> 1;
         return query(nd[t].lc, l, m, ql, qr) + query(nd[t].rc, m, r, ql, qr);
     }

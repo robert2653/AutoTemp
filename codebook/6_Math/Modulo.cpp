@@ -1,14 +1,19 @@
 template<class T>
 constexpr T power(T a, ll b) {
     T res {1};
-    for (; b; b /= 2, a *= a)
-        if (b & 1) res *= a;
+    for (; b; b /= 2, a *= a) {
+        if (b & 1) {
+            res *= a;
+        }
+    }
     return res;
 }
 constexpr ll mul(ll a, ll b, ll p) {
     ll res = a * b - ll(1.L * a * b / p) * p;
     res %= p;
-    if (res < 0) res += p;
+    if (res < 0) {
+        res += p;
+    }
     return res;
 }
 template<ll P>
@@ -24,8 +29,12 @@ struct MInt {
         Mod = Mod_;
     }
     constexpr ll norm(ll x) const {
-        if (x < 0) x += getMod();
-        if (x >= getMod()) x -= getMod();
+        if (x < 0) {
+            x += getMod();
+        }
+        if (x >= getMod()) {
+            x -= getMod();
+        }
         return x;
     }
     constexpr MInt operator-() const {
@@ -66,7 +75,10 @@ struct MInt {
         return lhs /= rhs;
     }
     friend istream &operator>>(istream &is, MInt &a) {
-        ll v; is >> v; a = MInt(v); return is;
+        ll v;
+        is >> v;
+        a = MInt(v);
+        return is;
     }
     friend ostream &operator<<(ostream &os, const MInt &a) {
         return os << a.x;

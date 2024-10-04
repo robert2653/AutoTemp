@@ -6,12 +6,15 @@ void fft(vector<cd> &a, bool inv) {
     if (int(rev.size()) != n) {
         int k = __builtin_ctz(n) - 1;
         rev.resize(n);
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < n; i++) {
             rev[i] = rev[i >> 1] >> 1 | (i & 1) << k;
+        }
     }
-    for (int i = 0; i < n; i++)
-        if (rev[i] < i)
+    for (int i = 0; i < n; i++) {
+        if (rev[i] < i) {
             swap(a[i], a[rev[i]]);
+        }
+    }
     for (int k = 1; k < n; k *= 2) {
         double ang = (inv ? -1 : 1) * PI / k;
         cd wn(cos(ang), sin(ang));
@@ -25,7 +28,11 @@ void fft(vector<cd> &a, bool inv) {
             }
         }
     }
-    if (inv) for (auto &x : a) x /= n;
+    if (inv) {
+        for (auto &x : a) {
+            x /= n;
+        }
+    }
 }
 template<class T>
 vector<double> mulT(const vector<T> &a, const vector<T> &b) {
@@ -33,11 +40,13 @@ vector<double> mulT(const vector<T> &a, const vector<T> &b) {
     int n = 2 << __lg(a.size() + b.size());
     fa.resize(n), fb.resize(n);
     fft(fa, false), fft(fb, false);
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < n; i++) {
         fa[i] = fa[i] * fb[i];
+    }
     fft(fa, true);
     vector<double> res(n);
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < n; i++) {
         res[i] = fa[i].real();
+    }
     return res; // use llround if need
 }

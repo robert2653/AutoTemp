@@ -4,7 +4,9 @@ int main() {
     // dfs_graph
     vector<bool> vis(n);
     auto dfs = [&](auto self, int u) -> void {
-        if (vis[u]) return;
+        if (vis[u]) {
+            return;
+        }
         vis[u] = true;
         for (auto v: adj[u]) {
             self(self, v);
@@ -12,13 +14,15 @@ int main() {
     };
     dfs(dfs, 0);
     // bfs
-    vector<int> depth(n, 1e9);
+    vector<int> depth(n, 1E9);
     queue<int> q;
     auto bfs = [&](auto self, int s) -> void {
-        vis[s] = true, depth[s] = 0;
+        vis[s] = true;
+        depth[s] = 0;
         q.push(s);
         while (!q.empty()) {
-            int u = q.front(); q.pop();
+            int u = q.front();
+            q.pop();
             for (auto v : adj[u]) {
                 if (vis[v]) continue;
                 vis[v] = true;

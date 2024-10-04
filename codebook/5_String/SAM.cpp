@@ -48,31 +48,40 @@ struct SAM {
     }
 };
 void solve() {
-    string s; cin >> s;
+    string s;
+    cin >> s;
     int n = s.length();
     vector<int> last(n + 1); // s[i - 1] 的後綴終點位置
     last[0] = 1;
     SAM sam;
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < n; i++) {
         last[i + 1] = sam.extend(last[i], s[i] - 'a');
+    }
     int sz = sam.t.size();
     vector<int> cnt(sz);
-    for (int i = 1; i <= n; i++)
+    for (int i = 1; i <= n; i++) {
         cnt[last[i]]++; // 去重 = 1
+    }
     vector<vector<int>> order(sz);
-    for (int i = 1; i < sz; i++)
+    for (int i = 1; i < sz; i++) {
         order[sam.t[i].len].push_back(i);
-    for (int i = sz - 1; i > 0; i--)
-        for (int u : order[i])
-            if (sam.t[u].link != -1)
+    }
+    for (int i = sz - 1; i > 0; i--) {
+        for (int u : order[i]) {
+            if (sam.t[u].link != -1) {
                 cnt[sam.t[u].link] += cnt[u];
+            }
+        }
+    }
     vector<ll> dp(sz, -1);
     auto dfs = [&](auto self, int u) -> void {
         dp[u] = cnt[u];
         for (int c = 0; c < SAM::ALPHABET_SIZE; c++) {
             int v = sam.t[u].next[c];
             if (v) {
-                if (dp[v] == -1) self(self, v);
+                if (dp[v] == -1) {
+                    self(self, v);
+                }
                 dp[u] += dp[v];
             }
         }

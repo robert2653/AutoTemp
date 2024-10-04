@@ -2,12 +2,16 @@ struct SCC {
     int n, cur, cnt;
     vector<vector<int>> adj;
     vector<int> stk, dfn, low, bel;
-    SCC(int n_ = 0) { init(n_); }
+    SCC(int n_ = 0) {
+        init(n_);
+    }
     void init(int n_) {
         n = n_;
         adj.assign(n, {});
-        dfn.assign(n, -1), low.resize(n);
-        bel.assign(n, -1), stk.clear();
+        dfn.assign(n, -1);
+        low.resize(n);
+        bel.assign(n, -1);
+        stk.clear();
         cur = cnt = 0;
     }
     void addEdge(int u, int v) {
@@ -35,15 +39,17 @@ struct SCC {
         }
     }
     vector<int> work() {
-        for (int i = 0; i < n; i++)
-            if (dfn[i] == -1) dfs(i);
+        for (int i = 0; i < n; i++) {
+            if (dfn[i] == -1) {
+                dfs(i);
+            }
+        }
         return bel;
     }
     struct Graph {
         int n;
         vector<pair<int, int>> edges;
-        vector<int> siz;
-        vector<int> cnte;
+        vector<int> siz, cnte;
     };
     Graph compress() {
         Graph g;

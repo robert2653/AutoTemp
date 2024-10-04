@@ -30,12 +30,20 @@ struct LinkCutTree { // 1-based
     }
     void push(int t) {
         if (nd[t].rev) {
-            if (nd[t].ch[0]) make_rev(nd[t].ch[0]);
-            if (nd[t].ch[1]) make_rev(nd[t].ch[1]);
+            if (nd[t].ch[0]) {
+                make_rev(nd[t].ch[0]);
+            }
+            if (nd[t].ch[1]) {
+                make_rev(nd[t].ch[1]);
+            }
             nd[t].rev = false;
         }
-        if (nd[t].ch[0]) apply(nd[t].ch[0], nd[t].tag);
-        if (nd[t].ch[1]) apply(nd[t].ch[1], nd[t].tag);
+        if (nd[t].ch[0]) {
+            apply(nd[t].ch[0], nd[t].tag);
+        }
+        if (nd[t].ch[1]) {
+            apply(nd[t].ch[1], nd[t].tag);
+        }
         nd[t].tag = Tag();
     }
     void pull(int t) {
@@ -55,9 +63,13 @@ struct LinkCutTree { // 1-based
         int q = nd[t].p;
         int x = !pos(t);
         nd[q].ch[!x] = nd[t].ch[x];
-        if (nd[t].ch[x]) nd[nd[t].ch[x]].p = q;
+        if (nd[t].ch[x]) {
+            nd[nd[t].ch[x]].p = q;
+        }
         nd[t].p = nd[q].p;
-        if (!isrt(q)) nd[nd[q].p].ch[pos(q)] = t;
+        if (!isrt(q)) {
+            nd[nd[q].p].ch[pos(q)] = t;
+        }
         nd[t].ch[x] = q;
         nd[q].p = t;
         pull(q);
@@ -104,7 +116,9 @@ struct LinkCutTree { // 1-based
     bool neighber(int x, int y) {
         makeRoot(x);
         access(y);
-        if (nd[y].ch[0] != x || nd[x].ch[1]) return false;
+        if (nd[y].ch[0] != x || nd[x].ch[1]) {
+            return false;
+        }
         return true;
     }
     void split(int rt, int y) {
@@ -113,8 +127,9 @@ struct LinkCutTree { // 1-based
     }
     void link(int x, int y) {
         makeRoot(x);
-        if (findRoot(y) != x)
+        if (findRoot(y) != x) {
             nd[x].p = y;
+        }
     }
     void cut(int x, int y) {
         makeRoot(x);

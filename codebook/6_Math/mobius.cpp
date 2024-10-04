@@ -19,7 +19,8 @@ void init() {
     }
 }
 void solve() {
-    ll a, b, c, d, k; cin >> a >> b >> c >> d >> k;
+    ll a, b, c, d, k;
+    cin >> a >> b >> c >> d >> k;
     auto cal = [&](ll x, ll y) -> int {
         int res = 0;
         for (int l = 1, r; l <= min(x, y); l = r + 1) {

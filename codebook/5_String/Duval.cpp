@@ -6,8 +6,11 @@ vector<string> duval(string s) {
     while (i < n) {
         int k = i, j = i + 1;
         while (s[k] <= s[j] && j < n) {
-            if (s[k] < s[j]) k = i;
-            else k++;
+            if (s[k] < s[j]) {
+                k = i;
+            } else {
+                k++;
+            }
             j++;
         }
         while (i <= k) {
@@ -26,8 +29,11 @@ string min_round(string s) {
         start = i;
         int k = i, j = i + 1;
         while (s[k] <= s[j] && j < n) {
-            if (s[k] < s[j]) k = i;
-            else k++;
+            if (s[k] < s[j]) {
+                k = i;
+            } else {
+                k++;
+            }
             j++;
         }
         while (i <= k) {

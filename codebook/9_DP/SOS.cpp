@@ -5,14 +5,19 @@
 // => ans = \sum _{i=0}^{n} (-1)^{pop_count(i)} 2^{dp[i]-1}
 // => 全部為 0 的個數 − 至少一個為 1 的個數 + 至少兩個為 1 的個數
 void solve() {
-    int n; cin >> n; Z ans = 0;
+    int n;
+    cin >> n;
+    Z ans = 0;
     vector<int> a(n);
-    for (int i = 0; i < n; i++) cin >> a[i];
+    for (int i = 0; i < n; i++) {
+        cin >> a[i];
+    }
     int m = __lg(*max_element(a.begin(), a.end())) + 1;
     // 定義 dp[mask] 為 mask 被包含於 a[i] 的 i 個數
     vector<Z> dp(1 << m);
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < n; i++) {
         dp[a[i]] += 1;
+    }
     for (int i = 0; i < m; i++) {
         for (int mask = 0; mask < 1 << m; mask++) {
             if (mask >> i & 1) {
@@ -32,7 +37,8 @@ void solve() {
 // x & y = x, 代表包含 x 的 y 個數, 定義為 dp[x][1]
 // x & y != 0, 代表至少有一個位元都為 1 的 y 個數, = n - 與自己相同 - ~dp[x][0]
 void solve() {
-    int n; cin >> n;
+    int n;
+    cin >> n;
     vector<int> a(n);
     map<int, int> mp;
     for (int i = 0; i < n; i++) {

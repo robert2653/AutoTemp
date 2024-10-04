@@ -4,7 +4,8 @@ const int inv_2 = 500000004;
 // n / 1 * 1 + n / 2 * 2 + n / 3 * 3 + ... + n / n * n
 int main() {
     ll ans = 0;
-    ll n; cin >> n;
+    ll n;
+    cin >> n;
     for (ll l = 1, r; l <= n; l = r + 1) {
 	    r = n / (n / l);
         ll val = n / l;    // n / l 到 n / r 一樣的值

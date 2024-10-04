@@ -15,11 +15,13 @@ void Bounded_Knapsack() {
         for (int r = 0; r < w[i]; r++) { // 餘數
             q.clear(); // q 記錄在 x = i 時的 dp 有單調性
             for (int x = 0; x * w[i] + r <= k; x++) {
-                while (!q.empty() && q.front() < x - num[i])
+                while (!q.empty() && q.front() < x - num[i]) {
                     q.pop_front(); // 維護遞減
+                }
                 ll nxt = dp[0][x * w[i] + r] - x * v[i];
-                while (!q.empty() && dp[0][q.back() * w[i] + r] - q.back() * v[i] < nxt)
+                while (!q.empty() && dp[0][q.back() * w[i] + r] - q.back() * v[i] < nxt) {
                     q.pop_back();
+                }
                 q.push_back(x);
                 dp[1][x * w[i] + r] = dp[0][q.front() * w[i] + r] - q.front() * v[i] + x * v[i];
             }

@@ -8,21 +8,25 @@ int main() {
     // 再一個紀錄，包含這個點的左界
     vector<int> l_side(n + 1, inf), cnt(n + 5, 0);
     for (int i = 0; i < m; i++) {
-        int l, r; cin >> l >> r;
+        int l, r;
+        cin >> l >> r;
         l_side[r] = min(l_side[r], l);
         cnt[l]++;
         cnt[r + 1]--;
     }
-    for (int i = 2; i <= n; i++)
+    for (int i = 2; i <= n; i++) {
         cnt[i] += cnt[i - 1];
-    for (int i = n; i >= 2; i--)
+    }
+    for (int i = n; i >= 2; i--) {
         l_side[i - 1] = min(l_side[i - 1], l_side[i]);
+    }
     vector<int> dp(n + 1);
     dp[0] = 0;
     for (int i = 1; i <= n; i++) {
         dp[i] = cnt[i];
-        if (l_side[i] != inf)
+        if (l_side[i] != inf) {
             dp[i] += dp[l_side[i] - 1];
+        }
         dp[i] = max(dp[i], dp[i - 1]);
     }
     cout << dp[n] << "\n";
@@ -32,14 +36,16 @@ int main() {
 // 給你每個事件的 a, b，挑事件會把 a 全部加起來
 // 再加上 max(bi) - min(bi)
 int main(){
-    int n, k, ans = 0; cin >> n >> k;
-    vector<pii> v(n + 1);
+    int n, k, ans = 0;
+    cin >> n >> k;
+    vector<pair<int, int>> v(n + 1);
     for (int i = 1; i <= n; i++) {
-        int a, b; cin >> a >> b;
+        int a, b;
+        cin >> a >> b;
         v[i] = {a, b};
         if (a <= k) ans = 1;
     }
-    sort(v.begin() + 1, v.end(), [](pii &a, pii &b) {
+    sort(v.begin() + 1, v.end(), [](pair<int, int> &a, pair<int, int> &b) {
         return a.second < b.second;
     }); // 用 bi 來排，考慮第 i 個時可以先扣
     vector<vector<int>> dp(n + 1, vector<int>(n + 1, inf));

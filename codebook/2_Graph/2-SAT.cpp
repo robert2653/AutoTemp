@@ -1,5 +1,6 @@
 struct TwoSat {
-    int n; vector<vector<int>> e;
+    int n;
+    vector<vector<int>> e;
     vector<bool> ans;
     TwoSat(int n) : n(n), e(2 * n), ans(n) {}
     void addClause(int u, bool f, int v, bool g) {
@@ -35,12 +36,20 @@ struct TwoSat {
                 ++cnt;
             }
         };
-        for (int i = 0; i < 2 * n; ++i) if (dfn[i] == -1) tarjan(i);
+        for (int i = 0; i < 2 * n; ++i) {
+            if (dfn[i] == -1) {
+                tarjan(i);
+            }
+        }
         for (int i = 0; i < n; ++i) {
-            if (id[2 * i] == id[2 * i + 1]) return false;
+            if (id[2 * i] == id[2 * i + 1]) {
+                return false;
+            }
             ans[i] = id[2 * i] > id[2 * i + 1];
         }
         return true;
     }
-    vector<bool> answer() { return ans; }
+    vector<bool> answer() {
+        return ans;
+    }
 };

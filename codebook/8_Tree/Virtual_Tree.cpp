@@ -35,7 +35,8 @@ int work(vector<vector<int>> &vt) {
     return rt;
 }
 void solve() {
-    int n; cin >> n;
+    int n;
+    cin >> n;
     vector<vector<int>> g(n);
     vector<vector<pair<int, int>>> wg(n);
     vector<vector<int>> vt(n);
@@ -43,14 +44,18 @@ void solve() {
         int u, v, w;
         cin >> u >> v >> w;
         u--, v--;
-        g[u].push_back(v), g[v].push_back(u);
-        wg[u].emplace_back(v, w), wg[v].emplace_back(u, w);
+        g[u].push_back(v);
+        g[v].push_back(u);
+        wg[u].emplace_back(v, w);
+        wg[v].emplace_back(u, w);
     }
     build(n, g); // build LCA
     vector<int> dis(n, 1E9); // root 到各點的最小邊權
     auto dfs_dis = [&](auto &&self, int x, int p) -> void {
         for (auto [y, w] : wg[x]) {
-            if (y == p) continue;
+            if (y == p) {
+                continue;
+            }
             dis[y] = min(w, dis[x]);
             self(self, y, x);
         }
@@ -59,9 +64,11 @@ void solve() {
 
     vector<bool> iskey(n);
     vector<ll> dp(n);
-    int q; cin >> q;
+    int q;
+    cin >> q;
     while (q--) {
-        int m; cin >> m;
+        int m;
+        cin >> m;
         vector<int> key(m);
         for (int i = 0; i < m; i++) {
             cin >> key[i];
@@ -72,7 +79,9 @@ void solve() {
         sort(key.begin(), key.end(), [&](int a, int b) {
             return dfn[a] < dfn[b];
         }); // 要 sort 再 insert
-        for (auto x : key) insert(x, vt);
+        for (auto x : key) {
+            insert(x, vt);
+        }
         work(vt);
         auto dfs = [&](auto &&self, int x) -> void {
             for (auto y : vt[x]) {

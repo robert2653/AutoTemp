@@ -1,1 +1,1 @@
-## Codebook of Salmon and CCU_RemovingDigit
+## Codebook used in local with better coding style

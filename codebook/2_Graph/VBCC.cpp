@@ -7,8 +7,10 @@ struct VBCC {
     void init(int n_) {
         n = n_;
         adj.assign(n, {});
-        dfn.assign(n, -1), low.resize(n);
-        bcc.assign(n, {}), ap.assign(n, false);
+        dfn.assign(n, -1);
+        low.resize(n);
+        bcc.assign(n, {});
+        ap.assign(n, false);
         stk.clear();
         cur = cnt = 0;
     }
@@ -19,11 +21,14 @@ struct VBCC {
     void dfs(int x, int p) {
         dfn[x] = low[x] = cur++;
         stk.push_back(x);
-        int child = 0;
+        int ch = 0;
         for (auto y : adj[x]) {
-            if (y == p) continue;
+            if (y == p) {
+                continue;
+            }
             if (dfn[y] == -1) {
-                dfs(y, x), child++;
+                dfs(y, x);
+                ch++;
                 low[x] = min(low[x], low[y]);
                 if (low[y] >= dfn[x]) {
                     int v;
@@ -35,26 +40,29 @@ struct VBCC {
                     bcc[x].push_back(cnt);
                     cnt++;
                 }
-                if (low[y] >= dfn[x] && p != -1)
+                if (low[y] >= dfn[x] && p != -1) {
                     ap[x] = true;
+                }
             } else {
                 low[x] = min(low[x], dfn[y]);
             }
         }
-        if (p == -1 && child > 1)
+        if (p == -1 && ch > 1) {
             ap[x] = true;
+        }
     }
     vector<bool> work() {
-        for (int i = 0; i < n; i++)
-            if (dfn[i] == -1) dfs(i, -1);
+        for (int i = 0; i < n; i++) {
+            if (dfn[i] == -1) {
+                dfs(i, -1);
+            }
+        }
         return ap;
     }
     struct Graph {
         int n;
         vector<pair<int, int>> edges;
-        vector<int> bel;
-        vector<int> siz; // BCC 內節點數
-        vector<int> cnte; // BCC 內邊數
+        vector<int> bel, siz, cnte;
     };
     Graph compress() {
         Graph g; // 壓完是一棵樹, 但不一定每個 bel 都有節點
@@ -75,10 +83,13 @@ struct VBCC {
             g.siz[g.bel[u]]++;
         }
         g.n = cnt;
-        for (int i = 0; i < n; i++)
-            for (auto j : adj[i])
-                if (g.bel[i] == g.bel[j] && i < j)
+        for (int i = 0; i < n; i++) {
+            for (auto j : adj[i]) {
+                if (g.bel[i] == g.bel[j] && i < j) {
                     g.cnte[g.bel[i]]++;
+                }
+            }
+        }
         return g;
     }
 };

@@ -20,16 +20,24 @@ struct LiChaoSeg { // 取 max 再變換就好
         int m = (l + r) / 2;
         bool left = line.eval(l) < info[node].eval(l);
         bool mid = line.eval(m) < info[node].eval(m);
-        if (mid) swap(info[node], line); // 如果新線段比較好
-        if (r - l == 1) return;
-        else if (left != mid) update(line, 2 * node, l, m);
-        // 代表左半有交點
-        else update(line, 2 * node + 1, m, r); 
-        // 代表如果有交點一定在右半
+        if (mid) {  // 如果新線段比較好
+            swap(info[node], line);
+        }
+        if (r - l == 1) {
+            return;
+        } else if (left != mid) { // 代表左半有交點
+            update(line, 2 * node, l, m);
+        } else { // 代表如果有交點一定在右半
+            update(line, 2 * node + 1, m, r);
+        }
     }
-    void add_line(Line line) { update(line, 1, 0, n); }
+    void add_line(Line line) {
+        update(line, 1, 0, n);
+    }
     ll query(int x, int node, int l, int r) {
-        if (r - l == 1) return info[node].eval(x);
+        if (r - l == 1) {
+            return info[node].eval(x);
+        }
         int m = (l + r) / 2;
         if (x < m) {
             return min(info[node].eval(x), query(x, 2 * node, l, m));

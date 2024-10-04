@@ -21,24 +21,40 @@ struct kthPST : PST<int> {
         return t;
     }
     void add(int pos, int x, int val) { // 原數組位置, 離散化位置, 加值
-        if (rt.size() < n) rt.resize(n);
+        if (rt.size() < n) {
+            rt.resize(n);
+        }
         for (int i = pos + 1; i <= n; i += i & -i) {
             rt[i - 1] = modify(rt[i - 1], 0, len, x, val);
         }
     }
     int query(vector<int> &rta, vector<int> &rtb, int l, int r, int k) {
-        if (r - l == 1) return l;
+        if (r - l == 1) {
+            return l;
+        }
         int m = (l + r) / 2;
         int res = 0;
-        for (auto x : rta) res -= nd[nd[x].lc].info;
-        for (auto x : rtb) res += nd[nd[x].lc].info;
+        for (auto x : rta) {
+            res -= nd[nd[x].lc].info;
+        }
+        for (auto x : rtb) {
+            res += nd[nd[x].lc].info;
+        }
         if (res >= k) {
-            for (auto &x : rta) x = nd[x].lc; 
-            for (auto &x : rtb) x = nd[x].lc;
+            for (auto &x : rta) {
+                x = nd[x].lc; 
+            }
+            for (auto &x : rtb) {
+                x = nd[x].lc;
+            }
             return query(rta, rtb, l, m, k); 
         } else {
-            for (auto &x : rta) x = nd[x].rc; 
-            for (auto &x : rtb) x = nd[x].rc;
+            for (auto &x : rta) {
+                x = nd[x].rc; 
+            }
+            for (auto &x : rtb) {
+                x = nd[x].rc;
+            }
             return query(rta, rtb, m, r, k - res); 
         }
     }

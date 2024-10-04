@@ -1,6 +1,8 @@
 int main() {
-    int m, n; cin >> m >> n;
-    string s1, s2; cin >> s1 >> s2;
+    int m, n;
+    cin >> m >> n;
+    string s1, s2;
+    cin >> s1 >> s2;
     int L = 0;
     vector<vector<int>> dp(m + 1, vector<int>(n + 1, 0));
     for (int i = 1; i <= m; i++) {
@@ -21,8 +23,11 @@ int main() {
             m--, n--, length--;
         }
         else {
-            if (dp[m - 1][n] > dp[m][n - 1]) m--;
-            else n--;
+            if (dp[m - 1][n] > dp[m][n - 1]) {
+                m--;
+            } else {
+                n--;
+            }
         }
     }
     cout << s << "\n";

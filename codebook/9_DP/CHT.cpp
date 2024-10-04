@@ -14,10 +14,13 @@ struct CHT { // 用在查詢單調斜率也單調
         init(n_, init_);
     }
     void init(int n_ = 0, Line init_ = Line()) {
-        n = n_; hull.resize(n); reset(init_); 
+        n = n_;
+        hull.resize(n);
+        reset(init_); 
     }
     void reset(Line init_ = Line()) {
-        lptr = rptr = 0; hull[0] = init_;
+        lptr = rptr = 0;
+        hull[0] = init_;
     }
     bool pop_front(Line &l1, Line &l2, ll x) {
         // 斜率遞減、查詢遞增，因此只要左直線的 Y >= 右直線的 Y
@@ -30,13 +33,15 @@ struct CHT { // 用在查詢單調斜率也單調
         return (l3.b - l2.b) * (l1.m - l3.m) <= (l3.b - l1.b) * (l2.m - l3.m);
     }
     void insert(Line L) {
-        while (rptr - lptr > 0 && pop_back(hull[rptr - 1], hull[rptr], L))
+        while (rptr - lptr > 0 && pop_back(hull[rptr - 1], hull[rptr], L)) {
             rptr--;
+        }
         hull[++rptr] = L;
     }
     ll query(ll x) {
-        while (rptr - lptr > 0 && pop_front(hull[lptr], hull[lptr + 1], x))
+        while (rptr - lptr > 0 && pop_front(hull[lptr], hull[lptr + 1], x)) {
             lptr++;
+        }
         return hull[lptr].eval(x);
     }
 };

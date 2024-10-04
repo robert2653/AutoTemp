@@ -6,13 +6,19 @@ auto prim = [&](int n, vector<vector<pair<int, int>>> &adj) -> bool {
     while (!pq.empty()) {
         auto [u, w] = pq.top();
         pq.pop();
-        if (vis[u]) continue;
+        if (vis[u]) {
+            continue;
+        }
         vis[u] = true;
         sz++;
-        for (auto v : adj[u])
-            if (!vis[v.first])
+        for (auto v : adj[u]) {
+            if (!vis[v.first]) {
                 pq.emplace(v.second, v.first);
+            }
+        }
     }
-    if (sz == n) return true;
+    if (sz == n) {
+        return true;
+    }
     return false;
 };
