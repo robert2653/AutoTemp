@@ -37,15 +37,18 @@ void fft(vector<cd> &a, bool inv) {
 template<class T>
 vector<double> mulT(const vector<T> &a, const vector<T> &b) {
     vector<cd> fa(a.begin(), a.end()), fb(b.begin(), b.end());
-    int n = 2 << __lg(a.size() + b.size());
+    int n = 1, tot = a.size() + b.size() - 1;
+    while (n < tot) {
+        n *= 2;
+    }
     fa.resize(n), fb.resize(n);
     fft(fa, false), fft(fb, false);
     for (int i = 0; i < n; i++) {
         fa[i] = fa[i] * fb[i];
     }
     fft(fa, true);
-    vector<double> res(n);
-    for (int i = 0; i < n; i++) {
+    vector<double> res(tot);
+    for (int i = 0; i < tot; i++) {
         res[i] = fa[i].real();
     }
     return res; // use llround if need

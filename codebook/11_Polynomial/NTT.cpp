@@ -1,12 +1,12 @@
 template<int V, ll P>
-constexpr MInt<P> CInv = MInt<P>(V).inv();
+MInt<P> CInv = MInt<P>(V).inv();
 
 vector<ll> rev;
 template<ll P>
 vector<MInt<P>> roots{0, 1};
 
 template<int P>
-constexpr MInt<P> findPrimitiveRoot() {
+MInt<P> findPrimitiveRoot() {
     MInt<P> i = 2;
     int k = __builtin_ctz(P - 1);
     while (true) {
@@ -19,13 +19,13 @@ constexpr MInt<P> findPrimitiveRoot() {
 }
 
 template<ll P>
-constexpr MInt<P> primitiveRoot = findPrimitiveRoot<P>();
+MInt<P> primitiveRoot = findPrimitiveRoot<P>();
 
 template<>
-constexpr MInt<998244353> primitiveRoot<998244353> {31};
- 
+MInt<998244353> primitiveRoot<998244353> {31};
+
 template<ll P>
-constexpr void dft(vector<MInt<P>> &a) {
+void dft(vector<MInt<P>> &a) {
     int n = a.size();
     if (int(rev.size()) != n) {
         int k = __builtin_ctz(n) - 1;
@@ -64,7 +64,7 @@ constexpr void dft(vector<MInt<P>> &a) {
 }
  
 template<ll P>
-constexpr void idft(vector<MInt<P>> &a) {
+void idft(vector<MInt<P>> &a) {
     int n = a.size();
     reverse(a.begin() + 1, a.end());
     dft(a);
@@ -78,18 +78,18 @@ template<ll P = 998244353>
 struct Poly : public vector<MInt<P>> {
     using Value = MInt<P>;
     Poly() : vector<Value>() {}
-    explicit constexpr Poly(int n) : vector<Value>(n) {}
-    explicit constexpr Poly(const vector<Value> &a) : vector<Value>(a) {}
-    constexpr Poly(const initializer_list<Value> &a) : vector<Value>(a) {}
+    explicit Poly(int n) : vector<Value>(n) {}
+    explicit Poly(const vector<Value> &a) : vector<Value>(a) {}
+    Poly(const initializer_list<Value> &a) : vector<Value>(a) {}
     template<class InputIt, class = _RequireInputIter<InputIt>>
-    explicit constexpr Poly(InputIt first, InputIt last) : vector<Value>(first, last) {}
+    explicit Poly(InputIt first, InputIt last) : vector<Value>(first, last) {}
     template<class F>
-    explicit constexpr Poly(int n, F f) : vector<Value>(n) {
+    explicit Poly(int n, F f) : vector<Value>(n) {
         for (int i = 0; i < n; i++) {
             (*this)[i] = f(i);
         }
     }
-    constexpr Poly shift(int k) const {
+    Poly shift(int k) const {
         if (k >= 0) {
             auto b = *this;
             b.insert(b.begin(), k, 0);
@@ -100,12 +100,12 @@ struct Poly : public vector<MInt<P>> {
             return Poly(this->begin() + (-k), this->end());
         }
     }
-    constexpr Poly trunc(int k) const {
+    Poly trunc(int k) const {
         Poly f = *this;
         f.resize(k);
         return f;
     }
-    constexpr friend Poly operator+(const Poly &a, const Poly &b) {
+    friend Poly operator+(const Poly &a, const Poly &b) {
         Poly res(max(a.size(), b.size()));
         for (int i = 0; i < a.size(); i++) {
             res[i] += a[i];
@@ -115,7 +115,7 @@ struct Poly : public vector<MInt<P>> {
         }
         return res;
     }
-    constexpr friend Poly operator-(const Poly &a, const Poly &b) {
+    friend Poly operator-(const Poly &a, const Poly &b) {
         Poly res(max(a.size(), b.size()));
         for (int i = 0; i < a.size(); i++) {
             res[i] += a[i];
@@ -125,14 +125,14 @@ struct Poly : public vector<MInt<P>> {
         }
         return res;
     }
-    constexpr friend Poly operator-(const Poly &a) {
+    friend Poly operator-(const Poly &a) {
         vector<Value> res(a.size());
         for (int i = 0; i < int(res.size()); i++) {
             res[i] = -a[i];
         }
         return Poly(res);
     }
-    constexpr friend Poly operator*(Poly a, Poly b) {
+    friend Poly operator*(Poly a, Poly b) {
         if (a.size() == 0 || b.size() == 0) {
             return Poly();
         }
@@ -163,40 +163,40 @@ struct Poly : public vector<MInt<P>> {
         a.resize(tot);
         return a;
     }
-    constexpr friend Poly operator*(Value a, Poly b) {
+    friend Poly operator*(Value a, Poly b) {
         for (int i = 0; i < int(b.size()); i++) {
             b[i] *= a;
         }
         return b;
     }
-    constexpr friend Poly operator*(Poly a, Value b) {
+    friend Poly operator*(Poly a, Value b) {
         for (int i = 0; i < int(a.size()); i++) {
             a[i] *= b;
         }
         return a;
     }
-    constexpr friend Poly operator/(Poly a, Value b) {
+    friend Poly operator/(Poly a, Value b) {
         for (int i = 0; i < int(a.size()); i++) {
             a[i] /= b;
         }
         return a;
     }
-    constexpr Poly &operator+=(Poly b) {
+    Poly &operator+=(Poly b) {
         return (*this) = (*this) + b;
     }
-    constexpr Poly &operator-=(Poly b) {
+    Poly &operator-=(Poly b) {
         return (*this) = (*this) - b;
     }
-    constexpr Poly &operator*=(Poly b) {
+    Poly &operator*=(Poly b) {
         return (*this) = (*this) * b;
     }
-    constexpr Poly &operator*=(Value b) {
+    Poly &operator*=(Value b) {
         return (*this) = (*this) * b;
     }
-    constexpr Poly &operator/=(Value b) {
+    Poly &operator/=(Value b) {
         return (*this) = (*this) / b;
     }
-    constexpr Poly deriv() const {
+    Poly deriv() const {
         if (this->empty()) {
             return Poly();
         }
@@ -206,14 +206,14 @@ struct Poly : public vector<MInt<P>> {
         }
         return res;
     }
-    constexpr Poly integr() const {
+    Poly integr() const {
         Poly res(this->size() + 1);
         for (int i = 0; i < this->size(); ++i) {
             res[i + 1] = (*this)[i] / (i + 1);
         }
         return res;
     }
-    constexpr Poly inv(int m) const {
+    Poly inv(int m) const {
         Poly x{(*this)[0].inv()};
         int k = 1;
         while (k < m) {
@@ -222,10 +222,10 @@ struct Poly : public vector<MInt<P>> {
         }
         return x.trunc(m);
     }
-    constexpr Poly log(int m) const {
+    Poly log(int m) const {
         return (deriv() * inv(m)).integr().trunc(m);
     }
-    constexpr Poly exp(int m) const {
+    Poly exp(int m) const {
         Poly x{1};
         int k = 1;
         while (k < m) {
@@ -234,7 +234,7 @@ struct Poly : public vector<MInt<P>> {
         }
         return x.trunc(m);
     }
-    constexpr Poly pow(int k, int m) const {
+    Poly pow(int k, int m) const {
         int i = 0;
         while (i < this->size() && (*this)[i] == 0) {
             i++;
@@ -246,7 +246,7 @@ struct Poly : public vector<MInt<P>> {
         auto f = shift(-i) * v.inv();
         return (f.log(m - i * k) * k).exp(m - i * k).shift(i * k) * power(v, k);
     }
-    constexpr Poly sqrt(int m) const {
+    Poly sqrt(int m) const {
         Poly x{1};
         int k = 1;
         while (k < m) {
@@ -255,7 +255,7 @@ struct Poly : public vector<MInt<P>> {
         }
         return x.trunc(m);
     }
-    constexpr Poly mulT(Poly b) const {
+    Poly mulT(Poly b) const {
         if (b.size() == 0) {
             return Poly();
         }
@@ -263,7 +263,7 @@ struct Poly : public vector<MInt<P>> {
         reverse(b.begin(), b.end());
         return ((*this) * b).shift(-(n - 1));
     }
-    constexpr vector<Value> eval(vector<Value> x) const {
+    vector<Value> eval(vector<Value> x) const {
         if (this->size() == 0) {
             return vector<Value>(x.size(), 0);
         }

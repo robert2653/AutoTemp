@@ -1,55 +1,155 @@
-string Add(const string &a, const string &b) {
-    int n = a.length() - 1, m = b.length() - 1, car = 0;
-    string res;
-    while (n >= 0 || m >= 0 || car) {
-        int x = (n >= 0 ? a[n] - '0' : 0) + (m >= 0 ? b[m] - '0' : 0) + car;
-        res += (x % 10) + '0';
-        car = x / 10;
-        n--;
-        m--;
-    }
-    while (res.length() > 1 && res.back() == '0') {
-        res.pop_back();
-    }
-    reverse(res.begin(), res.end());
-    return res;
-}
-string Minus(const string &a, const string &b) {
-    // Assume a >= b
-    int n = a.length() - 1, m = b.length() - 1, bor = 0;
-    string res;
-    while (n >= 0) {
-        int x = a[n] - '0' - bor, y = m >= 0 ? b[m] - '0' : 0;
-        bor = 0;
-        if (x < y) {
-            x += 10;
-            bor = 1;
+struct BigNum { // require Mint and NTT ~idft
+    int sgn;
+    string x;
+    BigNum() : x("0"), sgn(1) {}
+    BigNum(string x, int sgn) : x(norm(x)), sgn(x == "0" ? 1 : sgn) {}
+    BigNum(string s) {
+        if (s.empty()) {
+            *this = BigNum();
+        } else if (s[0] == '-') {
+            sgn = -1;
+            x = s.substr(1);
+        } else {
+            sgn = 1;
+            x = s;
         }
-        res += x - y + '0';
-        n--;
-        m--;
+        x = norm(x);
     }
-    while (res.length() > 1 && res.back() == '0') {
-        res.pop_back();
+    string norm(string s) const {
+        if (s.empty()) return "0";
+        reverse(s.begin(), s.end());
+        while (s.length() > 1 && s.back() == '0') s.pop_back();
+        reverse(s.begin(), s.end());
+        return s;
     }
-    reverse(res.begin(), res.end());
-    return res;
-}
-string Multiple(const string &a, const string &b) {
-    string res = "0";
-    int n = a.length() - 1, m = b.length() - 1;
-    for (int i = m; i >= 0; i--) {
-        string add;
-        int car = 0;
-        for (int j = n; j >= 0 || car; j--) {
-            int x = (j >= 0 ? a[j] - '0' : 0) * (b[i] - '0') + car;
-            add += (x % 10) + '0', car = x / 10;
+    int cmp(string a, string b) { // abs cmp
+        if (a.length() != b.length()) {
+            return a.length() - b.length();
+        } else {
+            return (a < b ? -1 : a > b);
         }
-        while (add.length() > 1 && add.back() == '0') {
-            add.pop_back();
-        }
-        reverse(add.begin(), add.end());
-        res = Add(res, add + string(m - i, '0'));
     }
-    return res;
-}
+    string Add(const string &a, const string &b) {
+        int n = a.length() - 1, m = b.length() - 1, c = 0;
+        string res;
+        while (n >= 0 || m >= 0 || c) {
+            int x = (n >= 0 ? a[n] - '0' : 0) + (m >= 0 ? b[m] - '0' : 0) + c;
+            res += (x % 10) + '0', c = x / 10;
+            n--, m--;
+        }
+        reverse(res.begin(), res.end());
+        return norm(res);
+    }
+    string Minus(const string &a, const string &b) {
+        int n = a.length() - 1, m = b.length() - 1, bor = 0;
+        string res;
+        while (n >= 0) {
+            int x = a[n] - '0' - bor, y = m >= 0 ? b[m] - '0' : 0;
+            bor = 0;
+            if (x < y) x += 10, bor = 1;
+            res += x - y + '0';
+            n--, m--;
+        }
+        reverse(res.begin(), res.end());
+        return norm(res);
+    }
+    vector<Z> toVector() const {
+        vector<Z> res;
+        for (int i = x.size() - 1; i >= 0; i--) {
+            res.push_back(x[i] - '0');
+        }
+        return res;
+    }
+    string fromVector(const vector<Z> &v) {
+        string res;
+        int carry = 0;
+        for (int i = 0; i < v.size(); ++i) {
+            carry += v[i].x;
+            res += (carry % 10) + '0';
+            carry /= 10;
+        }
+        while (carry) {
+            res += (carry % 10) + '0';
+            carry /= 10;
+        }
+        reverse(res.begin(), res.end());
+        return norm(res);
+    }
+    BigNum operator-() const {
+        return BigNum(x, -sgn);
+    }
+    BigNum operator+=(const BigNum &rhs) & {
+        if (sgn == 1) {
+            if (rhs.sgn == -1) {
+                if (cmp(x, rhs.x) < 0) {
+                    sgn = -1, x = Minus(rhs.x, x);
+                } else {
+                    sgn = 1, x = Minus(x, rhs.x);
+                }
+            } else {
+                sgn = 1, x = Add(x, rhs.x);
+            }
+        } else {
+            if (rhs.sgn == -1) {
+                sgn = -1, x = Add(x, rhs.x);
+            } else {
+                if (cmp(x, rhs.x) <= 0) {
+                    sgn = 1, x = Minus(rhs.x, x);
+                } else {
+                    sgn = -1, x = Minus(x, rhs.x);
+                }
+            }
+        }
+        return *this;
+    }
+    BigNum operator-=(const BigNum &rhs) & {
+        return *this += -rhs;
+    }
+    vector<Z> ntt(vector<Z> a, vector<Z> b) {
+        if (a.size() < b.size()) {
+            swap(a, b);
+        }
+        int n = 1, tot = a.size() + b.size() - 1;
+        while (n < tot) {
+            n *= 2;
+        }
+        if (((P - 1) & (n - 1)) != 0 || b.size() < 128) {
+            vector<Z> c(a.size() + b.size() - 1);
+            for (int i = 0; i < a.size(); i++) {
+                for (int j = 0; j < b.size(); j++) {
+                    c[i + j] += a[i] * b[j];
+                }
+            }
+            return c;
+        }
+        a.resize(n);
+        b.resize(n);
+        dft(a);
+        dft(b);
+        for (int i = 0; i < n; ++i) {
+            a[i] *= b[i];
+        }
+        idft(a);
+        a.resize(tot);
+        return a;
+    }
+    BigNum operator*=(const BigNum &rhs) & {
+        vector<Z> a = toVector(), b = rhs.toVector();
+        return BigNum(fromVector(ntt(a, b)), sgn * rhs.sgn);
+    }
+    friend BigNum operator+(BigNum lhs, BigNum rhs) {
+        return lhs += rhs;
+    }
+    friend BigNum operator-(BigNum lhs, BigNum rhs) {
+        return lhs -= rhs;
+    }
+    friend BigNum operator*(BigNum lhs, BigNum rhs) {
+        return lhs *= rhs;
+    }
+    friend istream &operator>>(istream &is, BigNum &a) {
+        string v; is >> v; a = BigNum(v); return is;
+    }
+    friend ostream &operator<<(ostream &os, const BigNum &a) {
+        return os << (a.sgn == 1 ? "" : "-") << a.x;
+    }
+};
