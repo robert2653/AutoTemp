@@ -8,7 +8,9 @@ struct RMQ {
     vector<T> pre, suf, ini;
     vector<u64> stk;
     RMQ() {}
-    RMQ(const vector<T> &v) { init(v); }
+    RMQ(const vector<T> &v) {
+        init(v);
+    }
     void init(const vector<T> &v) {
         n = v.size();
         pre = suf = ini = v;
